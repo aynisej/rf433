@@ -24,10 +24,26 @@ and this project follows *Semantic Versioning*.
 - Initial public release
 - Tested on Kali Linux (x86_64)
 
+## [1.0.1] – Maintenance Release
+
+### Changed
+- Improved serial port detection and error handling
+- Clearer user feedback when no devices are available
+- Minor GUI layout adjustments
+- Internal code cleanup without behavior changes
+
+### Fixed
+- Application startup issues when no UART devices are present
+- Incorrect handling of unavailable serial ports
+
 ---
 
 ## [Unreleased]
 
+### Planned
+- RX/TX device separation improvements
+- Advanced protocol analysis
+- Logging and debug mode
 ### Planned
 - Improved serial port auto-detection
 - Better error handling and logging
