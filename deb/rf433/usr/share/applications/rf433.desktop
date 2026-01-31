@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=RF 433 Control
+Exec=rf433
+Icon=rf433
+Terminal=false
+Categories=Utility;

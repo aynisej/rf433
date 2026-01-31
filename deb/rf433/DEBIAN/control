@@ -1,0 +1,8 @@
+Package: rf433
+Version: 1.0.0
+Section: utils
+Priority: optional
+Architecture: amd64
+Maintainer: qweq
+Depends: libc6
+Description: RF 433 MHz control and sniffer tool
