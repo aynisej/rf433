@@ -12,7 +12,7 @@ most modern Linux systems.
 
 ---
 
-## ✨ Features
+##  Features
 
 - Receive 433 MHz RF signals (OOK / simple protocols)
 - Analyze pulses and bit sequences
@@ -24,7 +24,7 @@ most modern Linux systems.
 
 ---
 
-## 🔌 Supported Hardware
+##  Supported Hardware
 
 - 433 MHz RF receiver modules (e.g. XY-MK, RXB series)
 - 433 MHz RF transmitter modules (e.g. FS1000A)
@@ -35,7 +35,7 @@ most modern Linux systems.
 
 ---
 
-## 🖥 Supported Systems
+##  Supported Systems
 
 - Kali Linux
 - Debian / Ubuntu and derivatives
@@ -43,7 +43,7 @@ most modern Linux systems.
 
 ---
 
-## 📦 Installation
+##  Installation
 
 ### AppImage (Recommended)
 
@@ -64,7 +64,7 @@ serial devices (/dev/ttyUSB*) without running the application as root.
 
 ⸻
 
-▶️ Usage
+ Usage
  1. Connect the RF receiver and/or transmitter to a USB-UART adapter
  2. Plug the adapter into the system
  3. Launch RF433 Control
@@ -74,7 +74,7 @@ serial devices (/dev/ttyUSB*) without running the application as root.
 
 ⸻
 
-🔐 Permissions and udev
+ Permissions and udev
 
 When installed via .deb, a udev rule is automatically added for CH341 devices.
 
@@ -88,7 +88,7 @@ Log out and log back in after changing group membership.
 
 ⸻
 
-🛠 Build from Source (Developers)
+ Build from Source (Developers)
 
 The project includes a single build script that produces all artifacts:
  • standalone binary
@@ -110,7 +110,7 @@ No manual build steps are required.
 
 ⸻
 
-📤 Release Artifacts
+ Release Artifacts
 
 Each release provides:
  • RF_433_Control-x86_64.AppImage
@@ -120,7 +120,7 @@ These files can be found on the GitHub Releases page.
 
 ⸻
 
-🧪 Troubleshooting
+ Troubleshooting
 
 Application does not see serial ports
  • Check that the USB-UART adapter is detected (ls /dev/ttyUSB*)
@@ -138,7 +138,7 @@ No RF data received
 
 ⸻
 
-⚠️ Security Notice
+ Security Notice
 
 This software is intended only for:
  • educational purposes
@@ -150,7 +150,7 @@ without explicit permission.
 
 ⸻
 
-📄 License
+ License
 
 This project is licensed under the MIT License.
 See the LICENSE file for details.
