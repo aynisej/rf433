@@ -5,8 +5,8 @@ Settled decisions; do not reopen without new evidence or user request.
 1. New implementation replaces old; no backward compatibility.
 2. C++20/CMake; Qt 6; ESP32 uses ESP-IDF + LVGL; Core independent of UI.
 3. CPU-only UI; no OpenGL/Vulkan/Metal.
-4. Linux V1 first: x86_64 and ARM64 including Pi Zero 2 W.
-5. Linux artifacts: `.deb` + AppImage for both architectures.
+4. Linux V1 first: Ubuntu 24.04 LTS baseline for x86_64 and ARM64, including Pi Zero 2 W compatibility; user additionally approved Kali Rolling ARMHF on Pi Zero 2 W.
+5. Linux artifacts: `.deb` + AppImage for x86_64 and ARM64, plus `.deb` + AppImage for the Kali ARMHF target. ARMHF is Kali-specific; validate its Qt and AppImage packaging route separately.
 6. After Linux V1, continue the approved roadmap: macOS ARM64, Android ARM64-v8a and ESP32, subject only to genuine technical/product blockers or unavailable hardware, not token/quota austerity.
 7. Windows unsupported; RP2040/Pico excluded from V1.
 8. First public release 1.0.0; no public 0.x.

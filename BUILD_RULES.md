@@ -5,8 +5,10 @@
 - vcpkg for general C++ dependencies; GitHub Actions CI.
 - Install missing tools only after implementation authorization.
 - Pin compiler, CMake, Qt, vcpkg baseline, ESP-IDF and dependencies. No automatic upgrades.
-- Linux V1 artifacts: x86_64 `.deb` + AppImage; ARM64 `.deb` + AppImage.
+- Linux release baseline: Ubuntu 24.04 LTS for x86_64 and ARM64. Build `.deb` + AppImage for both.
 - Validate ARM64 CPU baseline, ABI, Qt software rendering and runtime compatibility for Pi Zero 2 W; generic ARM64 is not sufficient proof.
+- Additional approved target: Kali Rolling ARMHF on Pi Zero 2 W; build `.deb` + AppImage. Lock a dated Kali/package baseline and a separate ARMHF Qt toolchain. Qt 6.12 upstream desktop support does not list ARMHF; do not reuse the ARM64 Qt pin or claim upstream support for ARMHF.
+- ARMHF AppImage requires a validated ARMHF AppDir/runtime packaging path. The standard linuxdeploy build service currently supplies x86 AppImages; appimagetool documents ARMHF cross-build support. Pin and verify the chosen route before release.
 - CPU-only rendering. No OpenGL/Vulkan/Metal.
 - Keep scripts deterministic and runtime dependencies explicit.
 - CI builds and runs mandatory tests for selected stage architectures.

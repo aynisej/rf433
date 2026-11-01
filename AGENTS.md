@@ -21,7 +21,7 @@ Read SPECIFICATION.md, DECISIONS.md, BUILD_RULES.md, IMPLEMENTATION_PLAN.md and 
 - Ask only for critical unresolved decisions, architecture changes, destructive operations, required user/hardware intervention, insufficient budget, or release publication.
 - Stop on a blocker, save exact state in PROGRESS.md, commit and push that progress update when the repository is available, and report the specific intervention required. Do not treat the former 10% Go quota concern as a project constraint; the user has withdrawn that austerity policy.
 - Do not impose artificial token/quota austerity. The user has explicitly authorized using the available reset/renewed limits for thorough implementation, validation and refinement.
-- Complete the approved platform roadmap where technically feasible: Linux V1 first, then macOS ARM64, Android ARM64-v8a and ESP32. Do not silently drop a platform because of an earlier token-saving policy.
+- Complete the approved platform roadmap where technically feasible: Linux V1 first (Ubuntu 24.04 x86_64/ARM64 plus Kali Rolling ARMHF on Pi Zero 2 W), then macOS ARM64, Android ARM64-v8a and ESP32. Do not silently drop a platform because of an earlier token-saving policy.
 - Run comprehensive relevant tests, including extended, stress, resource, failure-recovery and security tests where practical. Do not skip useful validation merely to conserve tokens.
 - Use tokens efficiently: avoid redundant rereading and pointless iterations, but prioritize correctness, maintainability and verified behavior over minimizing token consumption.
 - If an actual product/tool limit, technical blocker or missing hardware prevents completion, record the limitation and continue with all work that can be responsibly completed.

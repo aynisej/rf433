@@ -8,9 +8,12 @@ Local general-purpose RF433 utility for authorized devices. V1 uses one EBYTE E0
 No telemetry, cloud service, automatic GitHub calls, update checks, export/import, backup, restore or out-of-app key access. Updates are manual from GitHub Releases.
 
 ## Platform priority
-Linux V1 first:
+Linux V1 first. Ubuntu 24.04 LTS is the minimum supported release baseline for x86_64 and ARM64 artifacts:
 - x86_64: `.deb` + AppImage
 - ARM64: `.deb` + AppImage, including compatibility validation for Raspberry Pi Zero 2 W (512 MB RAM)
+- Additional approved target: Kali Rolling on Raspberry Pi Zero 2 W using ARMHF, with `.deb` + AppImage. This does not promise generic ARMHF compatibility beyond the selected Kali target.
+
+ARMHF is a separate toolchain target. Qt 6.12's supported Linux desktop configurations do not list ARMHF; do not claim upstream-supported Qt 6.12 on this target. Pin a Kali-compatible Qt/toolchain route and validate the AppImage assembly path before claiming the artifact works.
 
 macOS ARM64, Android ARM64-v8a and ESP32 are optional later targets only if resources remain after Linux V1. Windows unsupported. No RP2040/Pico in V1. User's physical Pi testing is post-delivery and not a release prerequisite.
 
