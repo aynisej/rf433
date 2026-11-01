@@ -48,6 +48,13 @@ Stage 0 repository replacement, initial documentation commit, and macOS environm
 - Stopped the QtBase release build at 665/1,729 build steps before completion; no Qt install, RF433 app build, app launch or tests resulted from it. The configured tree and partial build are local generated files under ignored `build/` only.
 - This identifies a macOS Qt/Cocoa packaging blocker. Linux V1 can continue independently; before the later macOS stage, either a narrowly patched Qt Cocoa plugin must be assessed or the user must approve a different UI/dependency rule. No architecture change has been made.
 
+## Dependency pin audit — 2026-11-01
+
+- Date/time: 2026-11-01 07:53 Europe/Moscow.
+- Verified the current vcpkg `master` baseline at `9a5dfef5d1a0438a7d24856a85bd60f309d355e9`. Its manifest baseline selects OpenSSL `3.6.5#2`, SQLite `3.54.1`, and QtBase `6.11.2` ([vcpkg baseline](https://github.com/microsoft/vcpkg/blob/9a5dfef5d1a0438a7d24856a85bd60f309d355e9/versions/baseline.json)).
+- OpenSSL's release policy lists 3.6.5 support only through 2026-11-01, while 3.5.9 is an LTS release supported through 2030-04-08 ([OpenSSL release strategy](https://www.openssl-library.org/policies/releasestrat/), [OpenSSL source releases](https://www.openssl-library.org/source/)). The vcpkg version history currently includes OpenSSL 3.5.4 but not 3.5.9.
+- Do not pin vcpkg's current OpenSSL 3.6.5 baseline for RF433. Before implementing encryption, choose a reproducible supported OpenSSL 3.5.9 route (for example, a small vcpkg overlay port) or confirm the security-support status of each target distribution's patched OpenSSL package. The chosen Qt 6.12.0 is also separate from this baseline's QtBase 6.11.2.
+
 ## Approved scope
 Linux V1 first: Ubuntu 24.04 LTS x86_64 + ARM64, including Pi Zero 2 W compatibility, plus Kali Rolling ARMHF on Pi Zero 2 W. Deliver `.deb` and AppImage for all three target profiles. After Linux V1, continue with macOS ARM64, Android ARM64-v8a and ESP32 according to IMPLEMENTATION_PLAN.md. The former token/quota austerity policy has been withdrawn by the user. Windows and RP2040/Pico excluded. First public version 1.0.0. Release publication requires explicit user approval.
 
@@ -56,7 +63,7 @@ The user explicitly approved deleting the old `aynisej/rf433` repository without
 
 ## Blockers before subsequent stages
 1. **Compliant Qt build:** Linux Qt still needs a build/package dependency audit. On macOS, disabling Qt graphics features does not remove the Cocoa plugin's direct Metal framework link; defer app packaging and decide on a compliant Cocoa implementation before the macOS stage.
-2. **Toolchain pins:** Ubuntu 24.04 is selected for x86_64/ARM64 and Qt 6.12.0 is installed for local development, but exact Linux compiler, CMake, Qt acquisition, vcpkg and dependency versions are not recorded.
+2. **Toolchain pins:** Ubuntu 24.04 is selected for x86_64/ARM64, but exact Linux compiler, CMake, Qt acquisition and dependency versions are not recorded. The current vcpkg OpenSSL pin is past upstream support; select a supported crypto build before storage implementation.
 3. **ARMHF Qt/package baseline:** Kali ARMHF is approved, but Qt 6.12 upstream does not list ARMHF. Select and pin a dated Kali/package baseline and compatible Qt toolchain; validate `.deb` and AppImage packaging for ARMHF.
 4. **Hardware profiles:** no USB-SPI adapter is currently available. Exact adapter model/revision pin maps and verified GDO timing capability must be established from reliable documentation and hardware. Never guess.
 
