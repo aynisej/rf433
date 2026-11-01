@@ -1,11 +1,11 @@
 # Resource Policy Update
 
-Effective immediately, the previous strict token/quota austerity policy is withdrawn.
+The previous strict token/quota austerity policy was withdrawn, but the latest user instruction on 2026-11-01 sets a temporary validation constraint: about 70% of the Go plan limit remains, and tests that consume quota quickly must not be launched.
 
-- Do not restrict implementation scope or test depth merely to conserve tokens.
+- Do not reduce approved implementation scope. Prefer concise, targeted checks; defer repeated, stress, broad resource or other high-token test runs until the plan budget is renewed or the user changes this instruction. Record deferred validation accurately.
 - Linux V1 remains first, followed by macOS ARM64, Android ARM64-v8a and ESP32 as specified in the implementation roadmap.
-- Run comprehensive relevant unit, integration, stress, resource, fault-injection, security and packaging tests where practical.
-- Do not omit useful tests or approved platform work solely because of the former 10% Go quota concern.
+- Comprehensive release validation remains a project requirement, but it must respect the current token-use instruction.
+- The previous remaining-10% estimate is no longer current; use the latest approximately-70%-remaining estimate from the user.
 - Use resources efficiently, avoiding redundant work, but prioritize correctness, reliability and completion.
 - If an actual product limit, technical blocker or unavailable physical hardware prevents a task, document it precisely. Never claim tests or hardware validation that were not performed.
 - All other approved architecture, safety, licensing, privacy, release and user-approval constraints remain unchanged.

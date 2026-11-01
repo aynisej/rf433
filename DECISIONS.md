@@ -51,7 +51,7 @@ Settled decisions; do not reopen without new evidence or user request.
 47. License has exactly two conditions: no commercial use; forks/derivatives link and attribute https://github.com/aynisej/rf433.
 48. No additional license restrictions or fork behavior requirements.
 49. User's physical Pi testing is post-delivery, not release prerequisite.
-50. Mandatory tests remain required; run comprehensive relevant extended, stress, resource, fault-injection, corruption and security tests where practical. Do not skip useful validation merely to conserve tokens.
+50. Release validation remains comprehensive. Latest user instruction (2026-11-01): about 70% of the Go plan limit remains; avoid tests that consume quota quickly, favor concise targeted checks, and record deferred high-cost suites without claiming they passed.
 51. Agent progresses autonomously between approved checkpoints; pauses only for critical intervention.
 52. The former Python/CH341 prototype was validated only in a TTL/programmer-oriented setup and did not establish the intended CC1101-over-SPI operating path. Its build/package success is not evidence of SPI or RF functionality.
 53. The old `aynisej/rf433` repository is disposable and explicitly approved for deletion without backup. No code, tests, build configuration or history are to be reused.

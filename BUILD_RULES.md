@@ -15,7 +15,7 @@
 
 Mandatory validation: clean configure/build; essential Core tests; launch/smoke; package/runtime inspection; agreement gate; storage/encryption and independent Object Key deletion; no plaintext RF data in logs/temp/SQLite journal; hardware fault transitions; no automatic reconnect/retry/reinitialization during operations; exact log policy; no telemetry/network/update behavior.
 
-Run comprehensive relevant tests, including extended, stress, resource, fault-injection, corruption and security tests where practical. Do not skip useful validation merely to conserve tokens. If a test cannot be run because hardware, tooling or an actual product limit is unavailable, record the reason and use the strongest valid substitute without claiming equivalent physical validation.
+Release validation remains comprehensive, including relevant extended, stress, resource, fault-injection, corruption and security coverage. Latest user instruction (2026-11-01): about 70% of the Go plan limit remains; avoid tests that consume quota quickly, prefer concise targeted checks, and record deferred high-cost suites without claiming they passed. If a test cannot be run because hardware, tooling, budget or an actual product limit is unavailable, record the reason and use the strongest valid substitute without claiming equivalent physical validation.
 
 SemVer; first public version 1.0.0; no public 0.x. All artifacts for a version in one GitHub Release. Never publish without explicit user approval. Release notes must distinguish CI validation from physical hardware tests.
 
