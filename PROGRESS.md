@@ -1,7 +1,7 @@
 # Progress
 
 ## Current status
-Stage 0 repository replacement, initial documentation commit, and macOS environment audit are complete. Stage 1 has begun with a small C++20 Core action-policy library and a Qt Widgets desktop shell. The Core library compiles locally and cross-compiles to ARMHF. A custom Qt 6.12.0 ARMHF QtBase build with XCB and graphics APIs disabled, plus an ARMHF app compile, have succeeded in an isolated Linux VM. ELF dependency inspection found no prohibited GPU libraries in the app's runtime dependency closure. The application has not been launched on the Raspberry Pi; packaging, Pi UI/resource checks and RF hardware remain outstanding. No test suites, releases or physical hardware validation have been performed.
+Stage 0 repository replacement, initial documentation commit, and macOS environment audit are complete. Stage 1 has begun with a small C++20 Core action-policy library and a Qt Widgets desktop shell. The Core library compiles locally and cross-compiles to ARMHF. A custom Qt 6.12.0 ARMHF QtBase build with XCB and graphics APIs disabled, plus an ARMHF app compile, have succeeded in an isolated Linux VM. ELF dependency inspection found no prohibited GPU libraries. Local `.deb` and AppImage foundation artifacts have now been built for Raspberry Pi Zero 2 W/Kali ARMHF. The user selected a GitHub draft 1.0.0 release; it is not public. The application has not been installed or launched on the Raspberry Pi; Pi UI/resource checks and RF hardware remain outstanding. No test suites or physical hardware validation have been performed.
 
 ## Stage 0 execution record — 2026-11-01
 
@@ -62,6 +62,15 @@ Stage 0 repository replacement, initial documentation commit, and macOS environm
 - This ARMHF SDK uses Ubuntu 24.04 target packages and glibc 2.39; it is a cross-build baseline, not the user's Kali image. The Pi's exact Kali release, libraries, display session and architecture have not been read from the device. Do not claim actual Kali runtime, Pi launch, 512 MiB resource behavior, package install or radio operation from this result.
 - No test suites were run. Qt build and application compilation are targeted build checks requested for the Pi software/UI work. No `.deb` or AppImage was produced.
 
+## ARMHF foundation packages — 2026-11-01
+
+- Date/time: 2026-11-01 09:07 Europe/Moscow.
+- Built a local `.deb` (`Architecture: armhf`, package version `1.0.0~foundation1`) and an ARMHF AppImage from the foundation UI and the compliant Qt/XCB subset. The `.deb` contains the app, Qt Core/DBus/Gui/Widgets/XcbQpa, the XCB platform plugin, a launcher and icon. The AppImage was generated successfully with AppImage/appimagetool continuous build `9bab981` under QEMU; the downloaded ARMHF tool's SHA-256 was `e074da279b7ce3b1ded5aed6bd2a376f4c6b56da5a1e1d9e07bf9c880607c80f`.
+- Package inspection confirms ARMHF, hard-float EABI5. The Qt/app dependency set requires up to `GLIBC_2.38` and `GLIBCXX_3.4.30`; `.deb` declares `libc6 >= 2.38` and X11/XCB/XKB runtime packages. The AppImage bundles Qt libraries but still depends on those system libraries.
+- The actual Pi/Kali glibc and installed X11/XCB packages are unknown. Do not install these artifacts on the Pi until the target system meets the package dependencies; the device's Kali release has not been queried. No package install, app launch, Pi resource check, runtime test suite or RF hardware check was performed.
+- Artifacts and temporary packaging scripts are under ignored `build/`; no release artifact or helper script was added to the repository. SHA-256 checksums are kept alongside the local artifacts.
+- User requested a GitHub release but, when asked about the conflict between a foundation-only app and the full public 1.0.0 policy, explicitly chose a **draft** 1.0.0 release. Do not publish this draft without a later explicit instruction.
+
 ## Dependency pin audit — 2026-11-01
 
 - Date/time: 2026-11-01 07:53 Europe/Moscow.
@@ -92,12 +101,12 @@ The user explicitly approved deleting the old `aynisej/rf433` repository without
 ## Blockers before subsequent stages
 1. **Compliant Qt build:** A custom ARMHF Qt 6.12.0 build with XCB enabled and OpenGL/Vulkan disabled now compiles with the RF433 app. The 59-object dependency closure over the app and all staged Qt libraries/plugins has no prohibited GPU library. This is based on an Ubuntu 24.04 ARMHF sysroot; verify against the user's Kali image and actual Pi. Ubuntu 24.04 x86_64/ARM64 binaries still need equivalent inspection. On macOS, disabling Qt graphics features does not remove the Cocoa plugin's direct Metal framework link; defer app packaging and decide on a compliant Cocoa implementation before the macOS stage.
 2. **Toolchain pins:** Ubuntu 24.04 is selected for x86_64/ARM64, but exact Linux compiler, CMake, Qt acquisition and dependency versions are not recorded. The current vcpkg OpenSSL pin is past upstream support; select a supported crypto build before storage implementation.
-3. **Primary Pi target:** Qt 6.12.0 and the application cross-compile for ARMHF, but Qt upstream does not list ARMHF and the build used Ubuntu 24.04 packages. Read the Pi's actual Kali release/libraries before pinning a compatible build baseline. The `.deb` and AppImage route, installation, UI launch and resource use on the actual Pi remain unverified before broadening initial testing to Ubuntu.
+3. **Primary Pi target:** Local ARMHF `.deb` and AppImage artifacts exist, but Qt upstream does not list ARMHF and the build used Ubuntu 24.04 packages. Their glibc floor is 2.38. Read the Pi's actual Kali release/libraries before installation; UI launch and resource use on the actual Pi remain unverified before broadening initial testing to Ubuntu.
 4. **Hardware profiles:** no USB-SPI adapter is currently available. Exact adapter model/revision pin maps and verified GDO timing capability must be established from reliable documentation and hardware. Never guess.
 
 ## Next checkpoint
-1. Complete ARMHF `.deb` and AppImage packaging route evaluation; confirm installed runtime dependencies and no-OpenGL/no-Vulkan links against the selected Kali baseline.
-2. When the Pi is available, capture its model, Kali release, architecture, display session and installed runtime library versions, then deploy the software/UI build and measure resource use on the 512 MB device.
+1. Create the selected private-to-publication GitHub draft with both ARMHF artifacts and prominent foundation-only/runtime-baseline notes; leave it unpublished.
+2. When the Pi is available, capture its model, Kali release, architecture, display session and installed runtime library versions; install and launch only if they meet the package ABI requirements, then measure resource use on the 512 MB device.
 3. Pin reproducible compiler, CMake, Qt and cryptographic dependency versions, prioritizing the Kali ARMHF toolchain and then Ubuntu 24.04 x86_64/ARM64.
 4. Continue target-independent Core work while the Pi software toolchain is prepared. Begin Pi radio integration only after an exact USB-SPI adapter model/revision is available and its pin map and GDO timing can be verified.
 
