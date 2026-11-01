@@ -1,7 +1,7 @@
 # Progress
 
 ## Current status
-Stage 0 repository replacement, initial documentation commit, and macOS environment audit are complete. Stage 1 has begun with a small C++20 Core action-policy library and a Qt Widgets desktop shell. The Core library compiles locally. The initial shell compile used Homebrew Qt with prohibited transitive OpenGL/Metal dependencies, so it is not a compliant application build and was not launched. RF hardware, persistent key storage and actual radio operations are not implemented. No test suites, compliant app launch checks, packages, releases or physical hardware validation have been performed.
+Stage 0 repository replacement, initial documentation commit, and macOS environment audit are complete. Stage 1 has begun with a small C++20 Core action-policy library and a Qt Widgets desktop shell. The Core library compiles locally and cross-compiles to ARMHF. A custom Qt 6.12.0 ARMHF QtBase build with XCB and graphics APIs disabled, plus an ARMHF app compile, have succeeded in an isolated Linux VM. ELF dependency inspection found no prohibited GPU libraries in the app's runtime dependency closure. The application has not been launched on the Raspberry Pi; packaging, Pi UI/resource checks and RF hardware remain outstanding. No test suites, releases or physical hardware validation have been performed.
 
 ## Stage 0 execution record — 2026-11-01
 
@@ -51,6 +51,17 @@ Stage 0 repository replacement, initial documentation commit, and macOS environm
 - Stopped the QtBase release build at 665/1,729 build steps before completion; no Qt install, RF433 app build, app launch or tests resulted from it. The configured tree and partial build are local generated files under ignored `build/` only.
 - This identifies a macOS Qt/Cocoa packaging blocker. Linux V1 can continue independently; before the later macOS stage, either a narrowly patched Qt Cocoa plugin must be assessed or the user must approve a different UI/dependency rule. No architecture change has been made.
 
+## Kali/Pi ARMHF Qt and application cross-build — 2026-11-01
+
+- Date/time: 2026-11-01 08:58 Europe/Moscow.
+- Prepared an isolated Colima 0.10.3 Linux VM on the Mac: Ubuntu 24.04.4 ARM64, 2 vCPU, 4 GiB RAM. Installed GCC/G++ 13.3 ARMHF cross-compilers, CMake 3.28.3, Ninja 1.11.1, QEMU/binfmt and ARMHF X11/XCB development dependencies. This setup required no user interaction.
+- Built Qt 6.12.0 host tools from the same source version, then configured and built QtBase for ARMHF with `-xcb -no-opengl -no-feature-vulkan -no-feature-graphicsframecapture -nomake tests -nomake examples`. Configuration reports Qt Widgets=yes, XCB=yes, OpenGL/EGL/Vulkan=no, and XCB GLX/EGL integrations=no. The build completed all 1,518 Ninja steps. No Qt test suite was built or run.
+- Cross-compiled the RF433 Core and Widgets application with `RF433_BUILD_APP=ON`. The resulting executable is ELF32 ARM, EABI5, hard-float, ARMv7. This is compile validation only; the executable was not launched.
+- Inspected the app's direct and transitive `DT_NEEDED` closure across 11 ELF objects, including QtGui, QtWidgets and the XCB platform plugin. No EGL, OpenGL, GLX, Vulkan, Metal or `libxcb-glx` dependency was found; all dependencies resolved in the Ubuntu 24.04 ARMHF sysroot plus Qt staging tree.
+- Build outputs and the generated Qt toolchain are under ignored `build/` or the Colima VM's `/tmp`; no temporary toolchain file or binary is tracked. The first build attempt on the macOS `virtiofs` mount could not rename generated headers; moving the build directory into the VM's native filesystem resolved it without changing project sources.
+- This ARMHF SDK uses Ubuntu 24.04 target packages and glibc 2.39; it is a cross-build baseline, not the user's Kali image. The Pi's exact Kali release, libraries, display session and architecture have not been read from the device. Do not claim actual Kali runtime, Pi launch, 512 MiB resource behavior, package install or radio operation from this result.
+- No test suites were run. Qt build and application compilation are targeted build checks requested for the Pi software/UI work. No `.deb` or AppImage was produced.
+
 ## Dependency pin audit — 2026-11-01
 
 - Date/time: 2026-11-01 07:53 Europe/Moscow.
@@ -79,14 +90,14 @@ Linux V1 includes Kali Rolling ARMHF on Raspberry Pi Zero 2 W as the primary ini
 The user explicitly approved deleting the old `aynisej/rf433` repository without a backup and recreating a clean repository at the same name and canonical URL. The old Python/CH341 TTL prototype must not be reused. Commit and push all project work directly to the replacement repository in coherent milestones. GitHub Release publication remains unapproved.
 
 ## Blockers before subsequent stages
-1. **Compliant Qt build:** QtBase 6.12 source-level CMake review shows the QtGui OpenGL and Vulkan sources/link dependencies are feature-gated; XCB's Vulkan code and GL integration plugins are also behind feature switches. A Linux raster Widgets build with OpenGL and Vulkan disabled appears feasible, but this is source inspection only: Linux binaries and plugin `DT_NEEDED` entries still need inspection on Ubuntu 24.04. On macOS, disabling Qt graphics features does not remove the Cocoa plugin's direct Metal framework link; defer app packaging and decide on a compliant Cocoa implementation before the macOS stage.
+1. **Compliant Qt build:** A custom ARMHF Qt 6.12.0 build with XCB enabled and OpenGL/Vulkan disabled now compiles with the RF433 app. Its 11-object runtime `DT_NEEDED` closure has no prohibited GPU library. This is based on an Ubuntu 24.04 ARMHF sysroot; verify against the user's Kali image and actual Pi. Ubuntu 24.04 x86_64/ARM64 binaries still need equivalent inspection. On macOS, disabling Qt graphics features does not remove the Cocoa plugin's direct Metal framework link; defer app packaging and decide on a compliant Cocoa implementation before the macOS stage.
 2. **Toolchain pins:** Ubuntu 24.04 is selected for x86_64/ARM64, but exact Linux compiler, CMake, Qt acquisition and dependency versions are not recorded. The current vcpkg OpenSSL pin is past upstream support; select a supported crypto build before storage implementation.
-3. **Primary Pi target:** Kali ARMHF is the first deployment and test target, but Qt 6.12 upstream does not list ARMHF. Select and pin a dated Kali/package baseline and compatible Qt toolchain; prove the `.deb` and AppImage route and test software/UI resource use on the actual Pi before moving the initial test focus to Ubuntu.
+3. **Primary Pi target:** Qt 6.12.0 and the application cross-compile for ARMHF, but Qt upstream does not list ARMHF and the build used Ubuntu 24.04 packages. Read the Pi's actual Kali release/libraries before pinning a compatible build baseline. The `.deb` and AppImage route, installation, UI launch and resource use on the actual Pi remain unverified before broadening initial testing to Ubuntu.
 4. **Hardware profiles:** no USB-SPI adapter is currently available. Exact adapter model/revision pin maps and verified GDO timing capability must be established from reliable documentation and hardware. Never guess.
 
 ## Next checkpoint
-1. Select a dated Kali Rolling ARMHF package baseline and Qt route; prove `.deb`/AppImage packaging and no-OpenGL/no-Vulkan runtime dependencies for the Pi target.
-2. When the Pi is available for initial testing, capture its model, Kali release and architecture, then deploy the software/UI build and measure resource use on the 512 MB device.
+1. Complete ARMHF `.deb` and AppImage packaging route evaluation; confirm installed runtime dependencies and no-OpenGL/no-Vulkan links against the selected Kali baseline.
+2. When the Pi is available, capture its model, Kali release, architecture, display session and installed runtime library versions, then deploy the software/UI build and measure resource use on the 512 MB device.
 3. Pin reproducible compiler, CMake, Qt and cryptographic dependency versions, prioritizing the Kali ARMHF toolchain and then Ubuntu 24.04 x86_64/ARM64.
 4. Continue target-independent Core work while the Pi software toolchain is prepared. Begin Pi radio integration only after an exact USB-SPI adapter model/revision is available and its pin map and GDO timing can be verified.
 
