@@ -6,6 +6,7 @@ option(RF433_BUILD_APP "Build the Qt Widgets desktop shell" ON)
 
 add_library(rf433_core STATIC
     src/core/action_policy.cpp
+    src/core/name_policy.cpp
     src/core/session_state.cpp
 )
 

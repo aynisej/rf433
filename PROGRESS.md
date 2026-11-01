@@ -56,6 +56,12 @@ Stage 0 repository replacement, initial documentation commit, and macOS environm
 - OpenSSL's release policy lists 3.6.5 support only through 2026-11-01, while 3.5.9 is an LTS release supported through 2030-04-08 ([OpenSSL release strategy](https://www.openssl-library.org/policies/releasestrat/), [OpenSSL source releases](https://www.openssl-library.org/source/)). The vcpkg version history currently includes OpenSSL 3.5.4 but not 3.5.9.
 - Do not pin vcpkg's current OpenSSL 3.6.5 baseline for RF433. Before implementing encryption, choose a reproducible supported OpenSSL 3.5.9 route (for example, a small vcpkg overlay port) or confirm the security-support status of each target distribution's patched OpenSSL package. The chosen Qt 6.12.0 is also separate from this baseline's QtBase 6.11.2.
 
+## Stage 1 name policy — 2026-11-01
+
+- Date/time: 2026-11-01 07:55 Europe/Moscow.
+- Added Core validation for the approved rename rule: one to 32 ASCII Latin letters/digits, with case-insensitive uniqueness against other base names. System suffixes are excluded by the API contract; timestamp-generated names remain an exception handled by creation logic.
+- `cmake --build build/core --parallel 2` succeeded with Apple Clang 21.0.0. No tests or UI launch were performed.
+
 ## Approved scope
 Linux V1 first: Ubuntu 24.04 LTS x86_64 + ARM64, including Pi Zero 2 W compatibility, plus Kali Rolling ARMHF on Pi Zero 2 W. Deliver `.deb` and AppImage for all three target profiles. After Linux V1, continue with macOS ARM64, Android ARM64-v8a and ESP32 according to IMPLEMENTATION_PLAN.md. The former token/quota austerity policy has been withdrawn by the user. Windows and RP2040/Pico excluded. First public version 1.0.0. Release publication requires explicit user approval.
 
