@@ -2,10 +2,11 @@ cmake_minimum_required(VERSION 3.28)
 
 project(RF433 LANGUAGES CXX)
 
-find_package(Qt6 6.12.0 EXACT REQUIRED COMPONENTS Widgets)
+option(RF433_BUILD_APP "Build the Qt Widgets desktop shell" ON)
 
 add_library(rf433_core STATIC
     src/core/action_policy.cpp
+    src/core/session_state.cpp
 )
 
 target_include_directories(rf433_core
@@ -20,20 +21,24 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
     target_compile_options(rf433_core PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
-add_executable(rf433_app
-    src/app/main.cpp
-    src/app/main_window.cpp
-)
+if(RF433_BUILD_APP)
+    find_package(Qt6 6.12.0 EXACT REQUIRED COMPONENTS Widgets)
 
-target_link_libraries(rf433_app
-    PRIVATE
-        rf433_core
-        Qt6::Widgets
-)
+    add_executable(rf433_app
+        src/app/main.cpp
+        src/app/main_window.cpp
+    )
 
-target_compile_features(rf433_app PRIVATE cxx_std_20)
-set_target_properties(rf433_app PROPERTIES CXX_EXTENSIONS OFF)
+    target_link_libraries(rf433_app
+        PRIVATE
+            rf433_core
+            Qt6::Widgets
+    )
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
-    target_compile_options(rf433_app PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_features(rf433_app PRIVATE cxx_std_20)
+    set_target_properties(rf433_app PROPERTIES CXX_EXTENSIONS OFF)
+
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+        target_compile_options(rf433_app PRIVATE -Wall -Wextra -Wpedantic)
+    endif()
 endif()

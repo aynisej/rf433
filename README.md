@@ -4,15 +4,17 @@ RF433 is a local RF433 utility for authorized devices. Its approved V1 path is L
 
 ## Current implementation status
 
-The repository contains the approved project baseline, a platform-independent Core action-policy library, and an initial Qt Widgets desktop shell. The shell implements the first-launch agreement and session-only adapter-family selection. No radio driver, saved-key storage backend, or RF operation is implemented yet. In particular, the Core policy code does not communicate with RF hardware.
+The repository contains the approved project baseline, a platform-independent Core action-policy library and radio-session state model, and an initial Qt Widgets desktop shell. The shell implements the first-launch agreement and session-only adapter-family selection. No radio driver, saved-key storage backend, or RF operation is implemented yet. In particular, the Core code does not communicate with RF hardware.
 
-## Build the Core library
+The Homebrew Qt build used for the initial compile links QtGui to OpenGL and Metal frameworks, which violates the approved strict dependency rule. It is not a compliant app or packaging toolchain; a reduced Qt build must be verified before GUI work continues.
 
-Requires CMake 3.28 or later, a C++20 compiler, and Qt 6.12.0 Widgets:
+## Build the platform-independent Core library
+
+Requires CMake 3.28 or later and a C++20 compiler:
 
 ```sh
-cmake -S . -B build/app -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="$(brew --prefix qtbase)"
-cmake --build build/app --parallel 2
+cmake -S . -B build/core -DRF433_BUILD_APP=OFF -DCMAKE_BUILD_TYPE=Debug
+cmake --build build/core --parallel 2
 ```
 
-The exact release toolchain and dependency versions are tracked as open preparation items in `PROGRESS.md`.
+The Qt Widgets shell requires Qt 6.12.0. The Homebrew QtGui build currently installed on the development Mac links OpenGL and Metal frameworks, so it does not satisfy the approved strict graphics dependency rule. A custom Qt build and its full dependency tree must be verified before the app target is built or packaged. Toolchain pins and the compliant Qt route are tracked in `PROGRESS.md`.

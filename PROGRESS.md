@@ -24,10 +24,20 @@ Stage 0 repository replacement, initial documentation commit, and macOS environm
 
 - Date/time: 2026-11-01 07:39 Europe/Moscow.
 - Installed Qt 6.12.0 via Homebrew formula `qtbase` (`6.12.0_2`) without user interaction; only `double-conversion` 3.4.0 and `md4c` 0.6.0 were additional dependencies. The Qt framework bottle is 62.3 MB.
-- Added the platform-independent Core action policy for main-menu availability, saved-key actions, and scan-only interruption. Added a minimal Qt Widgets shell with the first-launch agreement and session-only FT232H/MCP2210 family selection. The shell visibly marks radio operations and saved-key storage as unimplemented; it does not claim hardware support.
+- Added the platform-independent Core action policy and a radio-session state model for serialized operations, readiness gating, scan-only interruption, and immediate hardware-fault state. Added a minimal Qt Widgets shell with the first-launch agreement and session-only FT232H/MCP2210 family selection. The shell visibly marks radio operations and saved-key storage as unimplemented; it does not claim hardware support.
 - Local configure/build commands: `cmake -S . -B build/app -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=/opt/homebrew` and `cmake --build build/app --parallel 2`. Both succeeded on macOS 27.0.1 with Apple Clang 21.0.0, CMake 4.4.5 and Qt 6.12.0. This is compile validation only; no test suite or runtime launch was performed.
-- Graphics dependency question: Qt documentation says Qt Widgets uses a software renderer ([Qt graphics](https://doc.qt.io/qt-6/topics-graphics.html)), and the app source uses Widgets only. However, `otool -L build/app/rf433_app` shows the Homebrew QtGui framework's transitive load dependencies include both `OpenGL.framework` and `Metal.framework`; CMake also detects OpenGL. This may conflict with the approved no-OpenGL/Vulkan/Metal dependency requirement. User input is pending on whether the prohibition covers unused transitive links or only GPU rendering/API use. No packaging has been attempted.
+- Strict graphics rule confirmed by the user (2026-11-01): transitive OpenGL/Vulkan/Metal links are prohibited. The Homebrew QtGui framework used for the initial compile therefore does not satisfy the project rule and must not be used as the compliant app or packaging toolchain. No packaging has been attempted.
+- Qt 6.12 source review: `qtbase/src/gui/CMakeLists.txt` links OpenGL only when `QT_FEATURE_opengl` is enabled and adds the Metal graphics-frame-capture source/framework on Apple when `QT_FEATURE_graphicsframecapture` is enabled ([QtBase CMake source](https://github.com/qt/qtbase/blob/6.12/src/gui/CMakeLists.txt)). Candidate flags are `-no-opengl` and `-no-feature-graphicsframecapture`, with Metal-related feature handling still to verify. The full transitive dependency tree has not been checked; no Qt source build was started.
 - No test cases were added or run. The latest Go plan instruction remains active: avoid test runs that consume quota quickly and report deferred validation.
+
+## Stage 1 Core follow-up — 2026-11-01
+
+- Date/time: 2026-11-01 07:42 Europe/Moscow.
+- Added a Core radio-session state model that allows one operation at a time, gates Scan/Apply/Correction on a successful manual radio check, permits interruption only during Scan, and clears the active operation while faulting radio readiness after a hardware error.
+- Added `RF433_BUILD_APP=OFF` so the platform-independent Core library configures and builds without finding or linking Qt. Clean Core configure and build succeeded with Apple Clang 21.0.0; this is compile validation only.
+- No tests or app launch were performed. No Qt source build or package build was started.
+- Binary dependency inspection confirms the existing Homebrew QtGui links OpenGL and Metal; the strict project rule makes it non-compliant. The RF433 source files contain no OpenGL, Vulkan, Metal, RHI or Qt Quick API references.
+- Qt 6.12 source inspection shows the OpenGL framework linkage is conditional on `QT_FEATURE_opengl`, while the Metal graphics-frame-capture code/framework is conditional on `QT_FEATURE_graphicsframecapture`. A custom configuration disabling those features is a candidate route, but the full configure result and all runtime dependencies still need verification.
 
 ## Approved scope
 Linux V1 first: Ubuntu 24.04 LTS x86_64 + ARM64, including Pi Zero 2 W compatibility, plus Kali Rolling ARMHF on Pi Zero 2 W. Deliver `.deb` and AppImage for all three target profiles. After Linux V1, continue with macOS ARM64, Android ARM64-v8a and ESP32 according to IMPLEMENTATION_PLAN.md. The former token/quota austerity policy has been withdrawn by the user. Windows and RP2040/Pico excluded. First public version 1.0.0. Release publication requires explicit user approval.
@@ -36,13 +46,13 @@ Linux V1 first: Ubuntu 24.04 LTS x86_64 + ARM64, including Pi Zero 2 W compatibi
 The user explicitly approved deleting the old `aynisej/rf433` repository without a backup and recreating a clean repository at the same name and canonical URL. The old Python/CH341 TTL prototype must not be reused. Commit and push all project work directly to the replacement repository in coherent milestones. GitHub Release publication remains unapproved.
 
 ## Blockers before subsequent stages
-1. **Graphics dependency policy:** the Qt Widgets shell uses the documented software-rendered widget path, but the local QtGui binary has OpenGL/Metal dynamic dependencies. User input is pending on whether unused transitive graphics links violate the approved no-GPU-dependency rule; if they do, find a compliant Qt build before continuing GUI packaging.
+1. **Compliant Qt build:** the strict dependency rule is confirmed. Find a Qt configuration with no OpenGL/Vulkan/Metal linkage and verify its complete dynamic dependency tree before resuming GUI/package work. Candidate flags from source inspection remain unverified; assess disk use before a source build.
 2. **Toolchain pins:** Ubuntu 24.04 is selected for x86_64/ARM64 and Qt 6.12.0 is installed for local development, but exact Linux compiler, CMake, Qt acquisition, vcpkg and dependency versions are not recorded.
 3. **ARMHF Qt/package baseline:** Kali ARMHF is approved, but Qt 6.12 upstream does not list ARMHF. Select and pin a dated Kali/package baseline and compatible Qt toolchain; validate `.deb` and AppImage packaging for ARMHF.
 4. **Hardware profiles:** no USB-SPI adapter is currently available. Exact adapter model/revision pin maps and verified GDO timing capability must be established from reliable documentation and hardware. Never guess.
 
 ## Next checkpoint
-1. Resolve the Qt transitive OpenGL/Metal question and select a compliant build if the no-dependency rule is strict.
+1. Confirm and pin a Qt configuration without OpenGL/Vulkan/Metal linkage; recursively inspect dependencies before resuming GUI work.
 2. Pin reproducible compiler, CMake, Qt, vcpkg and dependency versions for the Ubuntu 24.04 x86_64/ARM64 baseline.
 3. Select a dated Kali Rolling ARMHF package baseline, a compatible Qt route and a validated ARMHF AppImage assembly method. Verify the user's installed Pi model/release/architecture when the device can be started; no Pi power-on is needed now.
 4. Select an exact USB-SPI adapter model/revision before hardware integration; verify pin maps and GDO timing from reliable documentation and physical hardware.
