@@ -5,26 +5,24 @@
 2. Create a completely empty replacement repository at the exact same URL: `https://github.com/aynisej/rf433`. Preserve the old repository's visibility if it can be read before deletion; if visibility cannot be determined, stop and ask rather than guessing.
 3. Clone the replacement repository to the Mac working environment.
 4. Add the approved project documents (`AGENTS.md`, `SPECIFICATION.md`, `IMPLEMENTATION_PLAN.md`, `BUILD_RULES.md`, `DECISIONS.md`, `PROGRESS.md`, `RESOURCE_POLICY_UPDATE.md`) and make/push the initial documentation commit.
-5. Audit macOS Apple Silicon tools, record the approved Ubuntu 24.04 and Kali ARMHF targets, pin toolchain/dependency versions, and resolve remaining specification conflicts before implementation.
+5. Audit macOS Apple Silicon tools, record Kali ARMHF on Raspberry Pi Zero 2 W as the primary initial bring-up/test target and Ubuntu 24.04 x86_64/ARM64 as additional Linux targets, pin toolchain/dependency versions, and resolve remaining specification conflicts before implementation.
 6. Continue by committing and pushing each coherent, tested milestone directly to this repository.
 
 Do not copy or adapt any old source, tests, CI workflows, package scripts, build configuration or repository history. The replacement starts clean.
 
-## Stage 1 — Linux x86_64 foundation
-Create minimal CMake/C++20 structure, Core/UI separation, domain model, state machine, event model, storage/hardware interfaces, Qt 6 CPU-rendered UI skeleton and first-launch agreement. Implement the approved per-object storage representation. Add concise README. Build x86_64 `.deb` and AppImage on Ubuntu 24.04.
+## Stage 1 — Kali ARMHF / Pi Zero 2 W initial bring-up
+Prioritize an installable Kali ARMHF build for the user's Raspberry Pi Zero 2 W. Establish the Qt Widgets CPU-rendered configuration and package route, then deploy and perform initial software/UI and 512 MB resource checks on the actual Pi before broadening Linux testing to Ubuntu. Keep the CMake/C++20 Core independent of UI, with the approved state, event, key metadata and storage interfaces. No RF hardware test can proceed until a USB-SPI adapter is available and its exact model/revision and timing capabilities are verified. Do not claim on-device checks before they occur.
 
 Mandatory checks: clean configure/build, essential Core tests, package inspection, launch/smoke test, agreement gate, storage/encryption/deletion checks, log policy, no-network/no-telemetry.
 
-## Stage 2 — Linux x86_64 radio path
-Implement USB-SPI abstraction and exact hardware profiles. Validate FT232H/MCP2210 support, especially precise GDO timing. Do not advertise full support if timing capture is inadequate. Implement CC1101 diagnostics and manual-only reinitialization; Scan/capture/dedup/Result Menu/Apply/Correction and fault states. Hardware-independent tests first. Record what was physically verified.
+## Stage 2 — Pi Zero 2 W / Kali ARMHF radio path
+After the initial on-device software checks and once an adapter is available, implement USB-SPI abstraction and exact hardware profiles. Validate the selected adapter's support, especially precise GDO timing. Do not advertise full support if timing capture is inadequate. Implement CC1101 diagnostics and manual-only reinitialization; Scan/capture/dedup/Result Menu/Apply/Correction and fault states. Hardware-independent checks first; record separately what was physically verified on the Pi.
 
-## Stage 3 — Linux ARM64 and Kali ARMHF / Pi Zero 2 W
-Build native ARM64 `.deb` and AppImage on Ubuntu 24.04. Validate ABI, CPU baseline, Qt software rendering, runtime dependencies and memory use for 512 MB Pi Zero 2 W; do not assume generic ARM64 compatibility.
-
-Also build Kali-specific ARMHF `.deb` and AppImage for Pi Zero 2 W. Pin a dated Kali package baseline and ARMHF-compatible Qt toolchain separately. Qt 6.12 upstream desktop configurations do not list ARMHF; prove the selected Qt and manually assembled AppImage route before claiming support. Validate memory use on the 512 MB device profile. User physical Pi testing remains post-delivery and is not a release gate.
+## Stage 3 — Ubuntu 24.04 x86_64 and ARM64
+Build Ubuntu 24.04 `.deb` and AppImage artifacts for x86_64 and ARM64. Validate ABI, CPU baseline, Qt software rendering, runtime dependencies and resource use. Keep Pi Zero 2 W compatibility as a separate device profile; do not infer ARM64 compatibility from a generic build.
 
 ## Stage 4 — Linux V1 release candidate
-Mandatory tests for Ubuntu 24.04 x86_64, Ubuntu 24.04 ARM64 and Kali ARMHF. Verify agreement, crypto-erasure semantics, hardware fault handling, scan cancellation, sequential operation and logging. Prepare notes and all artifacts in one release. First public release 1.0.0. Stop before publication and request explicit approval.
+Validate the initial Pi Zero 2 W/Kali ARMHF target and the additional Ubuntu 24.04 x86_64/ARM64 targets. Verify agreement, crypto-erasure semantics, hardware fault handling, scan cancellation, sequential operation and logging on each applicable platform. Prepare notes and all artifacts in one release. First public release 1.0.0. Stop before publication and request explicit approval.
 
 ## Stage 5 — macOS ARM64
 Port and validate the approved Core and Qt 6 UI on macOS ARM64. Produce the agreed distributable artifact(s), verify software rendering, storage behavior, permissions, USB-SPI support and launch/update behavior. Run comprehensive platform-specific tests.
