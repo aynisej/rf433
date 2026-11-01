@@ -1,7 +1,7 @@
 # Progress
 
 ## Current status
-Stage 0 repository replacement, initial documentation commit, and macOS environment audit are complete. Stage 1 has begun with a small C++20 Core action-policy library and a Qt Widgets desktop shell. The Core library compiles locally and cross-compiles to ARMHF. A custom Qt 6.12.0 ARMHF QtBase build with XCB and graphics APIs disabled, plus an ARMHF app compile, have succeeded in an isolated Linux VM. ELF dependency inspection found no prohibited GPU libraries. Local `.deb` and AppImage foundation artifacts have been built for Raspberry Pi Zero 2 W/Kali ARMHF. An unpublished GitHub Draft Release `v1.0.0` (`1.0.0 foundation (draft)`) now holds those ARMHF artifacts and checksums; it is not published. The application has not been installed or launched on the Raspberry Pi; Pi UI/resource checks and RF hardware remain outstanding. No test suites or physical hardware validation have been performed.
+Stage 0 repository replacement, initial documentation commit, and macOS environment audit are complete. Stage 1 has begun with a small C++20 Core action-policy library and a Qt Widgets desktop shell. The Core library compiles locally and cross-compiles to ARMHF. A custom Qt 6.12.0 ARMHF QtBase build with XCB and graphics APIs disabled, plus an ARMHF app compile, have succeeded in an isolated Linux VM. ELF dependency inspection found no prohibited GPU libraries. Local `.deb` and AppImage foundation artifacts have been built for Raspberry Pi Zero 2 W/Kali ARMHF. An unpublished GitHub Draft Release `v1.0.0` (`1.0.0 foundation (draft)`) holds those artifacts. Targeted Colima/QEMU ARMHF install and Xvfb smoke checks for both `.deb` and AppImage succeeded on Ubuntu 24.04 host emulation; this is not Kali-on-Pi validation. The application has not been installed or launched on the Raspberry Pi; Pi UI/512 MiB resource checks and RF hardware remain outstanding. No full test suite or physical hardware validation has been performed.
 
 ## Stage 0 execution record — 2026-11-01
 
@@ -111,10 +111,20 @@ The user explicitly approved deleting the old `aynisej/rf433` repository without
 - Uploaded assets: `rf433-foundation-armhf.deb`, `RF433-foundation-armhf.AppImage`, `SHA256SUMS.txt`. Release notes emphasize foundation-only status, glibc ≥ 2.38 / X11-XCB runtime baseline, and that Pi install/launch/RF work are unverified.
 - Not published. No Publish action was taken. No Pi install, UI launch, resource measurement, test suite or RF hardware check was performed.
 
+## Emulated ARMHF package smoke — 2026-11-01
+
+- Date/time: 2026-11-01 21:42 Europe/Moscow.
+- Environment: Colima Ubuntu 24.04.4 aarch64 VM (2 vCPU/4 GiB), glibc 2.39, foreign architecture `armhf`, `qemu-arm` user-mode + Xvfb. Not Kali Rolling and not Raspberry Pi Zero 2 W.
+- `.deb`: `apt-get install ./rf433-foundation-armhf.deb` succeeded (`Status: install ok installed`, version `1.0.0~foundation1`). Binary is ELF32 ARM EABI5 hard-float. Package `DT_NEEDED` closure over staged Qt/app objects: 0 OpenGL/EGL/Vulkan/GLX hits.
+- Launch: under Xvfb via `qemu-arm -L /`, Qt loaded `libqxcb.so` and the process stayed alive ≥5s (`LIVE_OK`); killed manually. Warning only: missing bundled Qt fonts directory (fontconfig/system fonts expected).
+- AppImage: `SHA256SUMS.txt` verified OK; `--appimage-extract` succeeded; extracted binary under Xvfb/`qemu-arm` also stayed alive ≥5s (`APPIMAGE_LIVE_OK`).
+- Native aarch64 exec of the ARMHF binary fails with `Exec format error` on this VM without qemu-user; that is expected for this host and does not predict Pi Zero 2 W ARMHF behavior.
+- Not claimed: Kali runtime, Pi install, 512 MiB resource measurement, interactive agreement UX verification, RF/hardware, or full test suite.
+
 ## Next checkpoint
-1. When the Pi is available, capture its model, Kali release, architecture, display session and installed runtime library versions; install and launch only if they meet the package ABI requirements, then measure resource use on the 512 MB device.
+1. On the real Pi Zero 2 W/Kali (after standard apt update/full-upgrade), install the draft `.deb` and launch the UI on the device display; record resource use on 512 MiB.
 2. Pin reproducible compiler, CMake, Qt and cryptographic dependency versions, prioritizing the Kali ARMHF toolchain and then Ubuntu 24.04 x86_64/ARM64.
-3. Continue target-independent Core work while the Pi software toolchain is prepared. Begin Pi radio integration only after an exact USB-SPI adapter model/revision is available and its pin map and GDO timing can be verified.
+3. Continue target-independent Core work. Begin Pi radio integration only after an exact USB-SPI adapter model/revision is available and its pin map and GDO timing can be verified.
 4. Keep the GitHub Draft Release unpublished until the user explicitly approves publication.
 
 ## Progress report template
