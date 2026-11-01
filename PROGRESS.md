@@ -1,7 +1,7 @@
 # Progress
 
 ## Current status
-Stage 0 repository replacement, initial documentation commit, and macOS environment audit are complete. The former public repository was deleted without backup; a clean public replacement was created at the same canonical URL, cloned to the selected local working folder, and the seven approved planning documents were committed and pushed. No implementation, build, test, package or release has been performed. These documents do not prove any feature exists.
+Stage 0 repository replacement, initial documentation commit, and macOS environment audit are complete. Stage 1 has begun with a small C++20 Core action-policy library and Qt Widgets desktop shell. The Core library and app compile locally, but RF hardware, persistent key storage and actual radio operations are not implemented. No test suites, app launch checks, packages, releases or physical hardware validation have been performed.
 
 ## Stage 0 execution record — 2026-11-01
 
@@ -20,22 +20,33 @@ Stage 0 repository replacement, initial documentation commit, and macOS environm
 - Primary references: [Qt 6.12 supported platforms](https://doc.qt.io/qt-6/supported-platforms.html), [Kali Pi Zero 2 W instructions](https://www.kali.org/docs/arm/raspberry-pi-zero-2-w/), [Kali ARM image matrix](https://arm.kali.org/images.html), [Kali qt6-base tracker](https://pkg.kali.org/pkg/qt6-base/news/), [AppImage ARM packaging guidance](https://docs.appimage.org/packaging-guide/from-source/native-binaries.html), and [appimagetool ARMHF build instructions](https://github.com/AppImage/appimagetool).
 - No tools or dependencies were installed. No builds, tests, packages, releases or physical hardware validation were performed.
 
+## Stage 1 initial foundation — 2026-11-01
+
+- Date/time: 2026-11-01 07:39 Europe/Moscow.
+- Installed Qt 6.12.0 via Homebrew formula `qtbase` (`6.12.0_2`) without user interaction; only `double-conversion` 3.4.0 and `md4c` 0.6.0 were additional dependencies. The Qt framework bottle is 62.3 MB.
+- Added the platform-independent Core action policy for main-menu availability, saved-key actions, and scan-only interruption. Added a minimal Qt Widgets shell with the first-launch agreement and session-only FT232H/MCP2210 family selection. The shell visibly marks radio operations and saved-key storage as unimplemented; it does not claim hardware support.
+- Local configure/build commands: `cmake -S . -B build/app -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=/opt/homebrew` and `cmake --build build/app --parallel 2`. Both succeeded on macOS 27.0.1 with Apple Clang 21.0.0, CMake 4.4.5 and Qt 6.12.0. This is compile validation only; no test suite or runtime launch was performed.
+- Graphics dependency question: Qt documentation says Qt Widgets uses a software renderer ([Qt graphics](https://doc.qt.io/qt-6/topics-graphics.html)), and the app source uses Widgets only. However, `otool -L build/app/rf433_app` shows the Homebrew QtGui framework's transitive load dependencies include both `OpenGL.framework` and `Metal.framework`; CMake also detects OpenGL. This may conflict with the approved no-OpenGL/Vulkan/Metal dependency requirement. User input is pending on whether the prohibition covers unused transitive links or only GPU rendering/API use. No packaging has been attempted.
+- No test cases were added or run. The latest Go plan instruction remains active: avoid test runs that consume quota quickly and report deferred validation.
+
 ## Approved scope
 Linux V1 first: Ubuntu 24.04 LTS x86_64 + ARM64, including Pi Zero 2 W compatibility, plus Kali Rolling ARMHF on Pi Zero 2 W. Deliver `.deb` and AppImage for all three target profiles. After Linux V1, continue with macOS ARM64, Android ARM64-v8a and ESP32 according to IMPLEMENTATION_PLAN.md. The former token/quota austerity policy has been withdrawn by the user. Windows and RP2040/Pico excluded. First public version 1.0.0. Release publication requires explicit user approval.
 
 ## Approved repository operation
 The user explicitly approved deleting the old `aynisej/rf433` repository without a backup and recreating a clean repository at the same name and canonical URL. The old Python/CH341 TTL prototype must not be reused. Commit and push all project work directly to the replacement repository in coherent milestones. GitHub Release publication remains unapproved.
 
-## Blockers before implementation
-1. **ARMHF Qt/package baseline:** Kali ARMHF is now an approved additional target, but Qt 6.12 upstream does not list ARMHF, and the user-installed Kali release/architecture have not been verified. Select and pin a dated Kali/package baseline and compatible Qt toolchain; validate `.deb` and AppImage packaging for ARMHF.
-2. **Hardware profiles:** no USB-SPI adapter is currently available. Exact adapter model/revision pin maps and verified GDO timing capability must be established from reliable documentation and hardware. Never guess.
-3. **Toolchain pins:** Ubuntu 24.04 is selected for x86_64/ARM64, but exact compatible compiler, CMake, Qt, vcpkg and dependency versions are not recorded. Pin each target toolchain before implementation.
+## Blockers before subsequent stages
+1. **Graphics dependency policy:** the Qt Widgets shell uses the documented software-rendered widget path, but the local QtGui binary has OpenGL/Metal dynamic dependencies. User input is pending on whether unused transitive graphics links violate the approved no-GPU-dependency rule; if they do, find a compliant Qt build before continuing GUI packaging.
+2. **Toolchain pins:** Ubuntu 24.04 is selected for x86_64/ARM64 and Qt 6.12.0 is installed for local development, but exact Linux compiler, CMake, Qt acquisition, vcpkg and dependency versions are not recorded.
+3. **ARMHF Qt/package baseline:** Kali ARMHF is approved, but Qt 6.12 upstream does not list ARMHF. Select and pin a dated Kali/package baseline and compatible Qt toolchain; validate `.deb` and AppImage packaging for ARMHF.
+4. **Hardware profiles:** no USB-SPI adapter is currently available. Exact adapter model/revision pin maps and verified GDO timing capability must be established from reliable documentation and hardware. Never guess.
 
 ## Next checkpoint
-1. Pin reproducible compiler, CMake, Qt, vcpkg and dependency versions for the Ubuntu 24.04 x86_64/ARM64 baseline.
-2. Select a dated Kali Rolling ARMHF package baseline, a compatible Qt route and a validated ARMHF AppImage assembly method. Verify the user's installed Pi model/release/architecture when the device can be started; this is not needed for the current documentation update.
-3. Select an exact USB-SPI adapter model/revision before hardware integration; verify pin maps and GDO timing from reliable documentation and physical hardware.
-4. Begin implementation only after toolchain/package pins and remaining critical pre-implementation blockers are resolved. Do not install missing tools before implementation is authorized.
+1. Resolve the Qt transitive OpenGL/Metal question and select a compliant build if the no-dependency rule is strict.
+2. Pin reproducible compiler, CMake, Qt, vcpkg and dependency versions for the Ubuntu 24.04 x86_64/ARM64 baseline.
+3. Select a dated Kali Rolling ARMHF package baseline, a compatible Qt route and a validated ARMHF AppImage assembly method. Verify the user's installed Pi model/release/architecture when the device can be started; no Pi power-on is needed now.
+4. Select an exact USB-SPI adapter model/revision before hardware integration; verify pin maps and GDO timing from reliable documentation and physical hardware.
+5. Continue with target-independent Core work while blockers are resolved; defer graphics packaging and radio integration until their requirements are clear.
 
 ## Progress report template
 - Date/time:
