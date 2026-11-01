@@ -42,7 +42,7 @@ Settled decisions; do not reopen without new evidence or user request.
 38. Physical overwrite best effort only; crypto-erasure primary; never overclaim.
 39. No export/import/backup/restore/history.
 40. Corruption is terminal for affected encryption layer; no recovery/regeneration/auto-repair.
-41. Exact physical representation of payload/Object Keys remains unresolved; ask before material schema choice.
+41. Approved by user 2026-11-01: desktop/mobile SQLite stores metadata and encrypted payload only; each CEK-wrapped per-object Object Key is in a separate app-internal file. Deleting an object deletes its SQLite record and its key file. No plaintext RF data or raw Object Key in SQLite/journals. Physical overwrite remains best-effort; crypto-erasure is primary.
 42. Temp internal only; clean stale temp before UI at startup.
 43. No artificial max signal size/scan duration; scan ends on result or manual cancel.
 44. Core streams and uses bounded buffers; account for Pi Zero 2 W 512 MB.

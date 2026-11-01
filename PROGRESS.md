@@ -14,6 +14,8 @@ Stage 0 repository replacement, initial documentation commit, and macOS environm
 - USB enumeration: no device names matching FT232/FTDI/MCP2210/CH341/CC1101/USB-SPI were present in system_profiler output. This is only an enumeration result; no adapter pinout, voltage, radio operation or physical hardware behavior was tested.
 - Toolchain pin status: CMake 4.4.5 is installed on the Mac but is only an observed host version. Qt 6.12.0 is the current LTS candidate (standard support through 2031-09-30); its supported-platform matrix lists Ubuntu 24.04 x86_64/ARM64 with GCC 13.x and Debian 12 x86_64/ARM64 with GCC 12. Qt's official Linux binaries are built on Ubuntu 24.04 with glibc 2.39; older glibc targets require a source build. Qt's ARM desktop reference is Raspberry Pi 5 with 8 GiB, so Pi Zero 2 W (512 MiB) remains a separate resource-validation risk. The inspected vcpkg baseline commit 9a5dfef5d1a0438a7d24856a85bd60f309d355e9 carries qtbase 6.11.2, so using Qt 6.12.0 means obtaining Qt separately or waiting for a compatible vcpkg port. No exact Linux distribution/glibc floor, compiler pin, Qt acquisition route, or final vcpkg baseline has been adopted; resolve the target floor first.
 - Primary references checked for the toolchain assessment: [Qt 6.12 release/support table](https://doc.qt.io/qt-6.12/qt-releases.html), [Qt supported platforms and Linux requirements](https://doc.qt.io/qt-6/supported-platforms.html), [inspected vcpkg baseline](https://github.com/microsoft/vcpkg/commit/9a5dfef5d1a0438a7d24856a85bd60f309d355e9), and [CMake 4.4 release notes](https://cmake.org/cmake/help/latest/release/4.4.html).
+- User follow-up (2026-11-01): approved SQLite metadata plus encrypted payload, with one CEK-wrapped Object Key file per object; deletion removes both the SQLite record and its Object Key file. The approved representation is now recorded in SPECIFICATION.md and DECISIONS.md. User reports Kali Linux on a Raspberry Pi, last updated about six months ago; exact Pi model, Kali release and installed architecture have not been verified. Official Kali materials list the dedicated Pi Zero 2 W image as armhf (32-bit) and document the 512 MB memory limit and default CLI mode. RF433's approved Linux target remains ARM64, so the Pi's actual architecture and intended Kali test scope must be confirmed; no armhf support is added without approval. The user reports no USB-SPI adapter yet.
+- Primary Kali references: [Kali Raspberry Pi Zero 2 W instructions](https://www.kali.org/docs/arm/raspberry-pi-zero-2-w/), [Kali ARM image matrix](https://arm.kali.org/images.html), and [Kali qt6-base package tracker](https://pkg.kali.org/pkg/qt6-base/news/) (qt6-base 6.11.2+dfsg-5 entered kali-rolling on 2026-10-21).
 - No tools or dependencies were installed. No builds, tests, packages, releases or physical hardware validation were performed.
 
 ## Approved scope
@@ -23,15 +25,15 @@ Linux V1 first: x86_64 + ARM64 including Raspberry Pi Zero 2 W. Deliver `.deb` a
 The user explicitly approved deleting the old `aynisej/rf433` repository without a backup and recreating a clean repository at the same name and canonical URL. The old Python/CH341 TTL prototype must not be reused. Commit and push all project work directly to the replacement repository in coherent milestones. GitHub Release publication remains unapproved.
 
 ## Blockers before implementation
-1. **Object storage representation:** exact physical representation of encrypted payloads and independently destroyable Object Keys is not approved. Select the simplest design satisfying erasure and plaintext-remnant requirements; ask user before locking in.
-2. **Hardware profiles:** exact adapter model/revision pin maps and verified GDO timing capability must be established from reliable documentation/hardware. Never guess.
-3. **Toolchain pins:** choose the Linux distribution/glibc floor and then record exact compatible compiler, CMake, Qt, vcpkg and dependency versions before implementation.
+1. **Linux baseline and Pi architecture:** the user reports Kali on a Raspberry Pi, but exact model/release/architecture are unknown. The dedicated official Pi Zero 2 W image is armhf while the approved RF433 deliverable is ARM64. Confirm the installed system and whether Kali is a test environment only; do not expand to armhf without approval.
+2. **Hardware profiles:** no USB-SPI adapter is currently available. Exact adapter model/revision pin maps and verified GDO timing capability must be established from reliable documentation and hardware. Never guess.
+3. **Toolchain pins:** choose the supported Linux distribution/glibc floor and exact Qt acquisition route, then record compatible compiler, CMake, Qt, vcpkg and dependency versions before implementation.
 
 ## Next checkpoint
-1. Choose the minimum Linux distribution/glibc baseline for x86_64 and ARM64, including what must run on Raspberry Pi Zero 2 W.
-2. Resolve the approved physical representation for per-object keys and encrypted payloads before persistent storage implementation.
-3. Establish the exact USB-SPI adapter model/revision, pin map and supported GDO timing capability from reliable documentation and hardware. Do not infer support from USB/SPI enumeration.
-4. Lock reproducible compiler, CMake, Qt, vcpkg and dependency pins compatible with the selected Linux baseline. Then begin implementation only after the critical pre-implementation blockers are resolved.
+1. Confirm the Raspberry Pi model and Kali release/architecture (`dpkg --print-architecture`, `uname -m`, and `/etc/os-release`); decide whether Kali is a compatibility test environment while preserving the approved ARM64 scope.
+2. Choose the minimum Linux distribution/glibc baseline for x86_64 and ARM64, including the Qt 6 acquisition route and Pi Zero 2 W runtime/resource requirements.
+3. Select an exact USB-SPI adapter model/revision before hardware integration; verify pin maps and GDO timing from reliable documentation and physical hardware.
+4. Lock reproducible compiler, CMake, Qt, vcpkg and dependency pins compatible with the selected baseline. Begin implementation only after the remaining critical pre-implementation blockers are resolved.
 
 ## Progress report template
 - Date/time:
