@@ -1,7 +1,7 @@
 # Progress
 
 ## Current status
-Stage 0 repository replacement, initial documentation commit, and macOS environment audit are complete. Stage 1 has begun with a small C++20 Core action-policy library and a Qt Widgets desktop shell. The Core library compiles locally and cross-compiles to ARMHF. A custom Qt 6.12.0 ARMHF QtBase build with XCB and graphics APIs disabled, plus an ARMHF app compile, have succeeded in an isolated Linux VM. ELF dependency inspection found no prohibited GPU libraries. Local `.deb` and AppImage foundation artifacts have now been built for Raspberry Pi Zero 2 W/Kali ARMHF. The user selected a GitHub draft 1.0.0 release; it is not public. The application has not been installed or launched on the Raspberry Pi; Pi UI/resource checks and RF hardware remain outstanding. No test suites or physical hardware validation have been performed.
+Stage 0 repository replacement, initial documentation commit, and macOS environment audit are complete. Stage 1 has begun with a small C++20 Core action-policy library and a Qt Widgets desktop shell. The Core library compiles locally and cross-compiles to ARMHF. A custom Qt 6.12.0 ARMHF QtBase build with XCB and graphics APIs disabled, plus an ARMHF app compile, have succeeded in an isolated Linux VM. ELF dependency inspection found no prohibited GPU libraries. Local `.deb` and AppImage foundation artifacts have been built for Raspberry Pi Zero 2 W/Kali ARMHF. An unpublished GitHub Draft Release `v1.0.0` (`1.0.0 foundation (draft)`) now holds those ARMHF artifacts and checksums; it is not published. The application has not been installed or launched on the Raspberry Pi; Pi UI/resource checks and RF hardware remain outstanding. No test suites or physical hardware validation have been performed.
 
 ## Stage 0 execution record — 2026-11-01
 
@@ -104,11 +104,18 @@ The user explicitly approved deleting the old `aynisej/rf433` repository without
 3. **Primary Pi target:** Local ARMHF `.deb` and AppImage artifacts exist, but Qt upstream does not list ARMHF and the build used Ubuntu 24.04 packages. Their glibc floor is 2.38. Read the Pi's actual Kali release/libraries before installation; UI launch and resource use on the actual Pi remain unverified before broadening initial testing to Ubuntu.
 4. **Hardware profiles:** no USB-SPI adapter is currently available. Exact adapter model/revision pin maps and verified GDO timing capability must be established from reliable documentation and hardware. Never guess.
 
+## Draft release 1.0.0 (unpublished) — 2026-11-01
+
+- Date/time: 2026-11-01 21:33 Europe/Moscow.
+- Created unpublished GitHub Draft Release tag `v1.0.0`, title `1.0.0 foundation (draft)`, from local `build/packages/` artifacts. Draft URL: https://github.com/aynisej/rf433/releases/tag/untagged-ada184e83f94f29a170d (`isDraft: true`).
+- Uploaded assets: `rf433-foundation-armhf.deb`, `RF433-foundation-armhf.AppImage`, `SHA256SUMS.txt`. Release notes emphasize foundation-only status, glibc ≥ 2.38 / X11-XCB runtime baseline, and that Pi install/launch/RF work are unverified.
+- Not published. No Publish action was taken. No Pi install, UI launch, resource measurement, test suite or RF hardware check was performed.
+
 ## Next checkpoint
-1. Create the selected private-to-publication GitHub draft with both ARMHF artifacts and prominent foundation-only/runtime-baseline notes; leave it unpublished.
-2. When the Pi is available, capture its model, Kali release, architecture, display session and installed runtime library versions; install and launch only if they meet the package ABI requirements, then measure resource use on the 512 MB device.
-3. Pin reproducible compiler, CMake, Qt and cryptographic dependency versions, prioritizing the Kali ARMHF toolchain and then Ubuntu 24.04 x86_64/ARM64.
-4. Continue target-independent Core work while the Pi software toolchain is prepared. Begin Pi radio integration only after an exact USB-SPI adapter model/revision is available and its pin map and GDO timing can be verified.
+1. When the Pi is available, capture its model, Kali release, architecture, display session and installed runtime library versions; install and launch only if they meet the package ABI requirements, then measure resource use on the 512 MB device.
+2. Pin reproducible compiler, CMake, Qt and cryptographic dependency versions, prioritizing the Kali ARMHF toolchain and then Ubuntu 24.04 x86_64/ARM64.
+3. Continue target-independent Core work while the Pi software toolchain is prepared. Begin Pi radio integration only after an exact USB-SPI adapter model/revision is available and its pin map and GDO timing can be verified.
+4. Keep the GitHub Draft Release unpublished until the user explicitly approves publication.
 
 ## Progress report template
 - Date/time:
