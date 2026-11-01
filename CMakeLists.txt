@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.28)
 
 project(RF433 LANGUAGES CXX)
 
-option(RF433_BUILD_APP "Build the Qt Widgets desktop shell" ON)
+option(RF433_BUILD_APP "Build the Qt Widgets desktop shell" OFF)
 
 add_library(rf433_core STATIC
     src/core/action_policy.cpp

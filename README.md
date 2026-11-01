@@ -13,8 +13,8 @@ The Homebrew Qt build used for the initial compile links QtGui to OpenGL and Met
 Requires CMake 3.28 or later and a C++20 compiler:
 
 ```sh
-cmake -S . -B build/core -DRF433_BUILD_APP=OFF -DCMAKE_BUILD_TYPE=Debug
+cmake -S . -B build/core -DCMAKE_BUILD_TYPE=Debug
 cmake --build build/core --parallel 2
 ```
 
-The Qt Widgets shell requires Qt 6.12.0. The Homebrew QtGui build currently installed on the development Mac does not satisfy the approved strict graphics dependency rule. The C++ Core library can be built independently with `RF433_BUILD_APP=OFF`. Toolchain pins and compliant platform-specific Qt routes are tracked in `PROGRESS.md`.
+The Qt Widgets shell requires Qt 6.12.0 and an approved platform Qt build. The Homebrew QtGui build currently installed on the development Mac does not satisfy the strict graphics dependency rule. `RF433_BUILD_APP` defaults to `OFF`; do not enable it until the platform's complete Qt dependency tree complies with the no-OpenGL/Vulkan/Metal rule. Toolchain pins and compliant platform-specific Qt routes are tracked in `PROGRESS.md`.

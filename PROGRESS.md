@@ -67,6 +67,7 @@ Stage 0 repository replacement, initial documentation commit, and macOS environm
 - Date/time: 2026-11-01 07:56 Europe/Moscow.
 - Added Core metadata types for UUID v4 object IDs, the approved modulation and compatibility states, broken/edited state, capture quality, nominal frequency and CC1101 register values. Added pure checks for UUID v4 bits and the approved 387–464 MHz range.
 - `cmake --build build/core --parallel 2` succeeded with Apple Clang 21.0.0. This remains a domain model only: it does not generate IDs, validate hardware register profiles, store payloads, or perform RF operations. No tests or app launch were performed.
+- Changed `RF433_BUILD_APP` to default `OFF`; a fresh configure with no application option succeeded and built only the framework-independent Core. No tests or app launch were performed.
 
 ## Approved scope
 Linux V1 first: Ubuntu 24.04 LTS x86_64 + ARM64, including Pi Zero 2 W compatibility, plus Kali Rolling ARMHF on Pi Zero 2 W. Deliver `.deb` and AppImage for all three target profiles. After Linux V1, continue with macOS ARM64, Android ARM64-v8a and ESP32 according to IMPLEMENTATION_PLAN.md. The former token/quota austerity policy has been withdrawn by the user. Windows and RP2040/Pico excluded. First public version 1.0.0. Release publication requires explicit user approval.
