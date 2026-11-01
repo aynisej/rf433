@@ -50,7 +50,7 @@ Settled decisions; do not reopen without new evidence or user request.
 46. RTC extension point only; no V1 driver/logic.
 47. License has exactly two conditions: no commercial use; forks/derivatives link and attribute https://github.com/aynisej/rf433.
 48. No additional license restrictions or fork behavior requirements.
-49. Approved by the user (2026-11-01): the Raspberry Pi Zero 2 W running Kali ARMHF is the primary initial real-device bring-up and test target. Do not defer its initial software/UI and resource checks until after Ubuntu testing. RF-specific checks wait until a compatible USB-SPI adapter is available and verified.
+49. Approved by the user (2026-11-01): the Raspberry Pi Zero 2 W running Kali ARMHF is the primary initial real-device bring-up and test target. Do not defer its initial software/UI and resource checks until after Ubuntu testing or USB-SPI acquisition. The adapter is needed only for RF-specific implementation and physical radio validation.
 50. Release validation remains comprehensive. Latest user instruction (2026-11-01): about 70% of the Go plan limit remains; avoid tests that consume quota quickly, favor concise targeted checks, and record deferred high-cost suites without claiming they passed.
 51. Agent progresses autonomously between approved checkpoints; pauses only for critical intervention.
 52. The former Python/CH341 prototype was validated only in a TTL/programmer-oriented setup and did not establish the intended CC1101-over-SPI operating path. Its build/package success is not evidence of SPI or RF functionality.

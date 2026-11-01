@@ -11,7 +11,7 @@
 Do not copy or adapt any old source, tests, CI workflows, package scripts, build configuration or repository history. The replacement starts clean.
 
 ## Stage 1 — Kali ARMHF / Pi Zero 2 W initial bring-up
-Prioritize an installable Kali ARMHF build for the user's Raspberry Pi Zero 2 W. Establish the Qt Widgets CPU-rendered configuration and package route, then deploy and perform initial software/UI and 512 MB resource checks on the actual Pi before broadening Linux testing to Ubuntu. Keep the CMake/C++20 Core independent of UI, with the approved state, event, key metadata and storage interfaces. No RF hardware test can proceed until a USB-SPI adapter is available and its exact model/revision and timing capabilities are verified. Do not claim on-device checks before they occur.
+Prioritize an installable Kali ARMHF build for the user's Raspberry Pi Zero 2 W. Establish the Qt Widgets CPU-rendered configuration and package route, then deploy and perform initial software/UI and 512 MB resource checks on the actual Pi before broadening Linux testing to Ubuntu. Keep the CMake/C++20 Core independent of UI, with the approved state, event, key metadata and storage interfaces. USB-SPI is outside this stage and must not block software, UI, package or resource checks. Defer only RF-specific implementation and physical radio validation until a compatible adapter is available and its exact model/revision and timing capabilities are verified. Do not claim on-device checks before they occur.
 
 Mandatory checks: clean configure/build, essential Core tests, package inspection, launch/smoke test, agreement gate, storage/encryption/deletion checks, log policy, no-network/no-telemetry.
 
