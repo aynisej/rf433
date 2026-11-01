@@ -1,7 +1,7 @@
 # Progress
 
 ## Current status
-Stage 0 repository replacement, initial documentation commit, and macOS environment audit are complete. Stage 1 has begun with a small C++20 Core action-policy library and Qt Widgets desktop shell. The Core library and app compile locally, but RF hardware, persistent key storage and actual radio operations are not implemented. No test suites, app launch checks, packages, releases or physical hardware validation have been performed.
+Stage 0 repository replacement, initial documentation commit, and macOS environment audit are complete. Stage 1 has begun with a small C++20 Core action-policy library and a Qt Widgets desktop shell. The Core library compiles locally. The initial shell compile used Homebrew Qt with prohibited transitive OpenGL/Metal dependencies, so it is not a compliant application build and was not launched. RF hardware, persistent key storage and actual radio operations are not implemented. No test suites, compliant app launch checks, packages, releases or physical hardware validation have been performed.
 
 ## Stage 0 execution record — 2026-11-01
 
@@ -68,9 +68,10 @@ Stage 0 repository replacement, initial documentation commit, and macOS environm
 - Added Core metadata types for UUID v4 object IDs, the approved modulation and compatibility states, broken/edited state, capture quality, nominal frequency and CC1101 register values. Added pure checks for UUID v4 bits and the approved 387–464 MHz range.
 - `cmake --build build/core --parallel 2` succeeded with Apple Clang 21.0.0. This remains a domain model only: it does not generate IDs, validate hardware register profiles, store payloads, or perform RF operations. No tests or app launch were performed.
 - Changed `RF433_BUILD_APP` to default `OFF`; a fresh configure with no application option succeeded and built only the framework-independent Core. No tests or app launch were performed.
+- Follow-up check: explicitly reconfigured the existing `build/app` cache with `RF433_BUILD_APP=OFF` and rebuilt `rf433_core` successfully. Removed the previously generated, non-compliant `build/app/rf433_app` binary and verified it is absent. No test suite or app launch was performed.
 
 ## Approved scope
-Linux V1 first: Ubuntu 24.04 LTS x86_64 + ARM64, including Pi Zero 2 W compatibility, plus Kali Rolling ARMHF on Pi Zero 2 W. Deliver `.deb` and AppImage for all three target profiles. After Linux V1, continue with macOS ARM64, Android ARM64-v8a and ESP32 according to IMPLEMENTATION_PLAN.md. The former token/quota austerity policy has been withdrawn by the user. Windows and RP2040/Pico excluded. First public version 1.0.0. Release publication requires explicit user approval.
+Linux V1 first: Ubuntu 24.04 LTS x86_64 + ARM64, including Pi Zero 2 W compatibility, plus Kali Rolling ARMHF on Pi Zero 2 W. Deliver `.deb` and AppImage for all three target profiles. After Linux V1, continue with macOS ARM64, Android ARM64-v8a and ESP32 according to IMPLEMENTATION_PLAN.md. The user withdrew the earlier blanket token-austerity policy, then gave a narrower current instruction: with about 70% of the Go plan limit remaining, avoid tests that consume quota rapidly and notify before long tasks. Windows and RP2040/Pico excluded. First public version 1.0.0. Release publication requires explicit user approval.
 
 ## Approved repository operation
 The user explicitly approved deleting the old `aynisej/rf433` repository without a backup and recreating a clean repository at the same name and canonical URL. The old Python/CH341 TTL prototype must not be reused. Commit and push all project work directly to the replacement repository in coherent milestones. GitHub Release publication remains unapproved.
@@ -102,4 +103,4 @@ The user explicitly approved deleting the old `aynisej/rf433` repository without
 
 
 ## Updated resource policy
-The user explicitly withdrew the earlier strict token-saving policy and confirmed access to a usage-limit reset. Do not constrain scope, testing depth or approved platform progression based on the previous remaining-10% estimate. Continue to use resources sensibly, but prioritize quality and completion. Actual technical/product limits and unavailable physical hardware must still be reported honestly.
+The earlier remaining-10% estimate and blanket token-saving policy were withdrawn. The current instruction is to avoid test runs that consume quota rapidly while about 70% remains and to notify the user before long tasks. This does not reduce approved scope or platform progression. Use targeted checks for current prep work; accurately report any validation deferred by this instruction, along with actual technical limits and unavailable physical hardware.
