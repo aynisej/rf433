@@ -34,8 +34,9 @@ Stage 0 repository replacement, initial documentation commit, and macOS environm
 
 - Date/time: 2026-11-01 07:42 Europe/Moscow.
 - Added a Core radio-session state model that allows one operation at a time, gates Scan/Apply/Correction on a successful manual radio check, permits interruption only during Scan, and clears the active operation while faulting radio readiness after a hardware error.
+- Added value-only Core progress/outcome event types for the specification's Radio Check stages, Scan phases, and operation endings. Event payloads contain no RF capture, key material, or other large sensitive data.
 - Added `RF433_BUILD_APP=OFF` so the platform-independent Core library configures and builds without finding or linking Qt. Clean Core configure and build succeeded with Apple Clang 21.0.0; this is compile validation only.
-- No tests or app launch were performed. No Qt source build or package build was started.
+- A direct C++20 syntax-only compile of `events.hpp` succeeded. No tests or app launch were performed.
 - Binary dependency inspection confirms the existing Homebrew QtGui links OpenGL and Metal; the strict project rule makes it non-compliant. The RF433 source files contain no OpenGL, Vulkan, Metal, RHI or Qt Quick API references.
 - Qt 6.12 feature flags can disable OpenGL, Vulkan, Metal and graphics-frame capture in QtGui, but this alone does not remove the Cocoa plugin's Metal framework dependency. The completed configure/source inspection is recorded below; no compliant Qt runtime has been produced.
 

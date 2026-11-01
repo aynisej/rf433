@@ -4,7 +4,7 @@ RF433 is a local RF433 utility for authorized devices. Its approved V1 path is L
 
 ## Current implementation status
 
-The repository contains the approved project baseline, a platform-independent Core action-policy library and radio-session state model, and an initial Qt Widgets desktop shell. The shell implements the first-launch agreement and session-only adapter-family selection. No radio driver, saved-key storage backend, or RF operation is implemented yet. In particular, the Core code does not communicate with RF hardware.
+The repository contains the approved project baseline, a platform-independent Core action-policy library, radio-session state model, and UI-facing progress/outcome event types, plus an initial Qt Widgets desktop shell. The shell implements the first-launch agreement and session-only adapter-family selection. No radio driver, saved-key storage backend, or RF operation is implemented yet. In particular, the Core code does not communicate with RF hardware.
 
 The Homebrew Qt build used for the initial compile links QtGui to OpenGL and Metal frameworks, which violates the approved strict dependency rule. A reduced Qt 6.12 source configuration still generates a macOS Cocoa platform plugin linked to Metal; that source build was stopped before producing Qt libraries. Neither route provides a compliant macOS app toolchain. See `PROGRESS.md` for the platform-specific blocker.
 
